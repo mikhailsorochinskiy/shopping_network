@@ -27,7 +27,7 @@ class NetworkNode(models.Model):
     city = models.CharField(max_length=50, verbose_name='Город', blank=True, null=True)
     street = models.CharField(max_length=50, verbose_name='Улица', blank=True, null=True)
     home_number = models.CharField(max_length=50, verbose_name='Номер дома', blank=True, null=True)
-    products = models.ManyToManyField(Product, related_name='nodes', verbose_name="Продукты")
+    products = models.ManyToManyField(Product, related_name='nodes', verbose_name="Продукты", blank=True, null=True)
     supplier = models.ForeignKey(
         'self',
         on_delete=models.SET_NULL,
@@ -56,9 +56,6 @@ class NetworkNode(models.Model):
     def level(self):
         if self.supplier is None:
             return 0
-        # Уровень этого узла = уровень поставщика + 1.
-        # Это рекурсивный расчет. Нужно быть осторожным с производительностью.
-        # На практике для частых вызовов лучше кешировать уровень или пересчитывать сигналами.
         return self.supplier.level + 1
 
     @property
